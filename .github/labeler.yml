@@ -1,0 +1,78 @@
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/**"
+          - "src/assets/**"
+
+core:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/core/**"
+
+shared:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/shared/**"
+
+features:
+  - head-branch: ['^feature', 'feature']
+
+release:
+  - base-branch: 'main'
+
+components:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.component.ts"
+          - "**/*.component.html"
+          - "**/*.component.scss"
+
+services:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.service.ts"
+
+models:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.model.ts"
+          - "**/*.interface.ts"
+
+routing:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*routing*.ts"
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.scss"
+          - "**/*.css"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.spec.ts"
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "angular.json"
+          - "tsconfig*.json"
+          - "package.json"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
