@@ -3,7 +3,7 @@ name: CI
 permissions:
   contents: read
   pull-requests: write
-  
+
 on:
   push:
     branches: [ main ]
@@ -46,9 +46,8 @@ jobs:
           name: coverage-report
           path: coverage/
 
-      - name: Comment Test Coverage in PR
-        uses: AthleticNet/comment-test-coverage@1.1
+      - name: Coverage comment
+        uses: romeovs/lcov-reporter-action@v0.3.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: coverage/imposter-front/coverage-summary.json
-          title: Test Coverage
+          lcov-file: ./coverage/imposter-front/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
