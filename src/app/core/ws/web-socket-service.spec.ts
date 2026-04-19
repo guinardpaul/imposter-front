@@ -1,25 +1,28 @@
 import { TestBed } from '@angular/core/testing';
-
+import { Client } from '@stomp/stompjs';
 import { WebSocketService } from './web-socket-service';
 import { STOMP_CLIENT_FACTORY } from './web-socket-token';
 
 describe('WebSocketService', () => {
+
   let service: WebSocketService;
 
-  let factoryMock: any;
-  let clientMock: any;
+  let clientMock: Partial<Client>;
+  let factoryMock: () => Client;
 
   beforeEach(() => {
+
     clientMock = {
       configure: vi.fn(),
       activate: vi.fn(),
       onConnect: undefined
     };
 
-    factoryMock = vi.fn(() => clientMock);
+    factoryMock = vi.fn(() => clientMock as Client);
 
     TestBed.configureTestingModule({
       providers: [
+        WebSocketService,
         {
           provide: STOMP_CLIENT_FACTORY,
           useValue: factoryMock
@@ -33,8 +36,8 @@ describe('WebSocketService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  it('should create and activate client', () => {
+  
+  it('should activate client', () => {
     service.connect();
 
     expect(factoryMock).toHaveBeenCalled();
@@ -52,4 +55,5 @@ describe('WebSocketService', () => {
 
     expect(clientMock.onConnect).toBeDefined();
   });
+
 });
