@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { Client } from '@stomp/stompjs';
+import { Client, StompConfig } from '@stomp/stompjs';
 import { WebSocketService } from './web-socket-service';
 import { STOMP_CLIENT_FACTORY } from './web-socket-token';
+import { Mock } from 'vitest';
 
 describe('WebSocketService', () => {
 
@@ -9,11 +10,13 @@ describe('WebSocketService', () => {
 
   let clientMock: Partial<Client>;
   let factoryMock: () => Client;
+  let configureSpy: Mock<(conf: StompConfig) => void>;
 
   beforeEach(() => {
+    configureSpy = vi.fn();
 
     clientMock = {
-      configure: vi.fn(),
+      configure: configureSpy,
       activate: vi.fn(),
       onConnect: undefined
     };
@@ -55,5 +58,13 @@ describe('WebSocketService', () => {
 
     expect(clientMock.onConnect).toBeDefined();
   });
+
+  it('should contains player-id header', () => {
+    service.connect();
+
+    const configArg = configureSpy.mock.calls[0][0];
+    expect(configArg.connectHeaders).toBeDefined();
+    expect(configArg.connectHeaders!['player-id']).toBe(service['playerId'])
+  })
 
 });

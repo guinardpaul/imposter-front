@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import * as uuid from 'uuid';
 import { STOMP_CLIENT_FACTORY } from './web-socket-token';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class WebSocketService {
     this.client = this.clientFactory();
 
     this.client.configure({
-      brokerURL: 'ws/localhost:8080/websocket',
+      brokerURL: environment.ws.brokerURL,
       reconnectDelay: 5000,
       connectHeaders: {
         "player-id": this.playerId
