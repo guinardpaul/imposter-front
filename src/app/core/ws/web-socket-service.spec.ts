@@ -18,7 +18,9 @@ describe('WebSocketService', () => {
     clientMock = {
       configure: configureSpy,
       activate: vi.fn(),
-      onConnect: undefined
+      onConnect: undefined,
+      subscribe: vi.fn(),
+      publish: vi.fn()
     };
 
     factoryMock = vi.fn(() => clientMock as Client);
@@ -66,5 +68,20 @@ describe('WebSocketService', () => {
     expect(configArg.connectHeaders).toBeDefined();
     expect(configArg.connectHeaders!['player-id']).toBe(service['playerId'])
   })
+
+  it('should subscribe to destination', () => {
+    const callback = vi.fn();
+    service.connect();
+    service.subscribe('/test', callback);
+    expect(clientMock.subscribe).toHaveBeenCalledWith('/test', callback);
+  });
+
+  it('should publish message to destination', () => {
+    const destination = '/test';
+    const body = { key: 'value' };
+    service.connect();
+    service.publish(destination, body);
+    expect(clientMock.publish).toHaveBeenCalledWith({ destination, body: JSON.stringify(body) });
+  });
 
 });

@@ -30,5 +30,14 @@ export class WebSocketService {
     };
 
     this.client.activate();
+  } 
+
+  subscribe(destination: string, callback: (message: any) => void) {
+    this.client.subscribe(destination, callback);
   }
+
+  publish(destination: string, body: any) {
+    this.client.publish({ destination, body: JSON.stringify(body) });
+  }
+
 }
