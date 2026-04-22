@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { LobbyService } from '../../lobby-service';
 import { CommonModule } from '@angular/common';
@@ -11,11 +11,10 @@ import { CommonModule } from '@angular/common';
 })
 export class LobbyPage {
 
-    private lobbyService: LobbyService;
+    private lobbyService = inject(LobbyService);
 
-    constructor(LobbyService: LobbyService) {
-        this.lobbyService = LobbyService;
-        this.lobbyService.initRoomSubscription();
+    constructor() {
+      this.lobbyService.initRoomSubscription();
     }
 
     create() {

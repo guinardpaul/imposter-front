@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { WebSocketService } from './core/ws/web-socket-service';
 
@@ -11,11 +11,7 @@ import { WebSocketService } from './core/ws/web-socket-service';
 export class App implements OnInit {
   protected readonly title = signal('imposter-front');
 
-  private webSocketService: WebSocketService;
-
-  constructor(WebSocketService: WebSocketService) {
-    this.webSocketService = WebSocketService;
-  }
+  private webSocketService = inject(WebSocketService);
 
   ngOnInit() {
     this.webSocketService.connect();

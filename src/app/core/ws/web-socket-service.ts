@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Client } from '@stomp/stompjs';
+import { Client, IMessage } from '@stomp/stompjs';
 import * as uuid from 'uuid';
 import { STOMP_CLIENT_FACTORY } from './web-socket-token';
 import { environment } from '../../../environments/environment';
@@ -32,11 +32,11 @@ export class WebSocketService {
     this.client.activate();
   } 
 
-  subscribe(destination: string, callback: (message: any) => void) {
+  subscribe(destination: string, callback: (message: IMessage) => void) {
     this.client.subscribe(destination, callback);
   }
 
-  publish(destination: string, body: any) {
+  publish(destination: string, body: unknown) {
     this.client.publish({ destination, body: JSON.stringify(body) });
   }
 

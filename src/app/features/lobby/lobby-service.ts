@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { WebSocketService } from '../../core/ws/web-socket-service';
 import { BehaviorSubject } from 'rxjs';
 import { Room } from '../../shared/models/room';
@@ -8,14 +8,9 @@ import { Room } from '../../shared/models/room';
 })
 export class LobbyService {
 
-  private webSocketService: WebSocketService;
+  private webSocketService = inject(WebSocketService);
   private roomsSubject = new BehaviorSubject<Room[]>([]);
   rooms$ = this.roomsSubject.asObservable();
-
-
-  constructor(WebSocketService: WebSocketService) {
-    this.webSocketService = WebSocketService;
-  }
 
   initRoomSubscription() {
     this.webSocketService.subscribe('/user/queue/game-info', (message) => {
