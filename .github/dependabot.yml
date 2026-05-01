@@ -5,6 +5,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      angular:
+        patterns:
+          - "@angular/*"
+      angular-dev:
+        patterns:
+          - "@angular-devkit/*"
+          - "@angular/cli"
+      rxjs:
+        patterns:
+          - "rxjs"
+      typescript:
+        patterns:
+          - "typescript"
 
   - package-ecosystem: "github-actions"
     directory: "/"
