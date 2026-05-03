@@ -36,4 +36,12 @@ describe('LobbyService', () => {
     expect(webSocketServiceMock.publish).toHaveBeenCalledWith('app/room.create', { roomName: 'New Room' });
   });
 
+  it('should publish join room message', () => {
+    const roomId = '123';
+
+    service.joinRoom(roomId);
+    
+    expect(webSocketServiceMock.publish).toHaveBeenCalledWith('app/room.join', { roomId: roomId, playerName: 'test'});
+  });
+
 });

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LobbyService } from '../../lobby-service';
 import { CommonModule } from '@angular/common';
 import { Room } from '../../../../shared/models/room';
@@ -15,7 +15,8 @@ export class LobbyPage {
 
   private lobbyService = inject(LobbyService);
   rooms$!: Observable<Room[]>;
-  roomName = '';
+  _roomName = signal('');
+  readonly roomName = this._roomName.asReadonly();
 
   playerName = 'Player1';
   playerId = 'abc-123';
@@ -24,12 +25,11 @@ export class LobbyPage {
     this.rooms$ = this.lobbyService.rooms$;
   }
 
-
   createRoom() {
-    if (!this.roomName.trim()) return;
+    if (!this.roomName.length) return;
 
     this.lobbyService.createRoom();
-    this.roomName = '';
+    this._roomName.set('');
   }
 
   joinRoom(roomId: string) {

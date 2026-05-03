@@ -1,14 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {RouterTestingHarness} from '@angular/router/testing';
 
 import { HomePage } from './home-page';
+import { LobbyPage } from '../../lobby/components/lobby-page/lobby-page';
+import { provideRouter } from '@angular/router';
+import { LobbyService } from '../../lobby/lobby-service';
+import { SettingsPage } from '../../settings/components/settings-page/settings-page';
 
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
+  let lobbyServiceMock: Partial<LobbyService>;
+
+  lobbyServiceMock = {
+      rooms$: undefined,
+      initRoomSubscription: vi.fn(),
+      createRoom: vi.fn() 
+    };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomePage]
+      imports: [HomePage],
+      providers: [
+        provideRouter([
+          { path: '', component: HomePage },
+          { path: 'lobby', component: LobbyPage },
+          { path: 'settings', component: SettingsPage }
+        ]),
+        { provide: LobbyService, useValue: lobbyServiceMock }
+      ]
     })
     .compileComponents();
 
@@ -20,4 +40,49 @@ describe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call goToLobby when clicking play button', () => {
+    const spy = vi.spyOn(component, 'goToLobby');
+
+    const button = fixture.nativeElement.querySelector('[id="play-button"]');
+
+    button.click();
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should navigate to lobby when clicking play', async () => {
+    const harness = await RouterTestingHarness.create();
+    const component = await harness.navigateByUrl('/', HomePage);
+
+    component.goToLobby();
+
+    await harness.navigateByUrl('/lobby');
+    expect(harness.routeNativeElement?.textContent)
+      .toContain('Lobby'); 
+  });
+
+  it('should call goToSettings when clicking settings button', () => {
+    const spy = vi.spyOn(component, 'goToSettings');
+
+    const button = fixture.nativeElement.querySelector('[id="settings-button"]');
+
+    button.click();
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should navigate to settings when clicking settings', async () => {
+    const harness = await RouterTestingHarness.create();
+    const component = await harness.navigateByUrl('/', HomePage);
+
+    component.goToSettings();
+
+    await harness.navigateByUrl('/settings');
+    expect(harness.routeNativeElement?.textContent)
+      .toContain('Settings'); 
+  });
+
 });

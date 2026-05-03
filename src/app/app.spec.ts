@@ -35,4 +35,13 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
+  it('should initialize WebSocket connection on init', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    app.ngOnInit();
+    expect(factoryMock).toHaveBeenCalled();
+    expect(clientMock.configure).toHaveBeenCalled();
+    expect(clientMock.activate).toHaveBeenCalled();
+  });
+
 });
