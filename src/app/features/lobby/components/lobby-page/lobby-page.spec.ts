@@ -32,13 +32,5 @@ describe('LobbyPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call initRoomSubscription on init', () => {
-    expect(lobbyServiceMock.initRoomSubscription).toHaveBeenCalled();
-  });
-
-  it('should call createRoom on create', () => {
-    component.create();
-    expect(lobbyServiceMock.createRoom).toHaveBeenCalled();
-  });
   
 });

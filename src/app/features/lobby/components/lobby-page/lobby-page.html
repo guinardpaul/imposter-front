@@ -1,4 +1,94 @@
-<p>Salle</p>
-<div class="example-button-row">
-    <button matButton="filled" (click)="create()">Créer une salle</button>
+<div class="max-w-5xl mx-auto p-6 text-white">
+
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-red-500 drop-shadow-lg">
+            🎭 Lobby Imposteur
+        </h1>
+        <p class="text-gray-400 mt-2">
+            Trouve ou crée une salle pour commencer la partie
+        </p>
+    </div>
+
+    <!-- PLAYER INFO -->
+    <div class="bg-gray-800/70 backdrop-blur border border-gray-700 rounded-2xl p-4 mb-6 shadow-lg">
+        <div class="flex items-center justify-between">
+
+            <div>
+                <p class="text-sm text-gray-400">Ton pseudo</p>
+                <p class="text-xl font-bold text-blue-400">{{ playerName }}</p>
+            </div>
+
+            <div class="text-sm text-gray-400">
+                ID: {{ playerId }}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CREATE ROOM -->
+    <div class="bg-gray-800/70 border border-gray-700 rounded-2xl p-5 mb-6 shadow-lg">
+
+        <h2 class="text-xl font-bold text-green-400 mb-3">
+            ➕ Créer une room
+        </h2>
+
+        <div class="flex gap-3">
+
+            <input [(ngModel)]="roomName" placeholder="Nom de la room..."
+                class="flex-1 px-4 py-2 rounded-xl bg-black/40 border border-gray-600 focus:border-green-400 outline-none transition" />
+
+            <button (click)="createRoom()"
+                class="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-bold shadow-lg hover:shadow-green-400/50 transition">
+                Créer
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ROOM LIST -->
+    <div class="bg-gray-800/70 border border-gray-700 rounded-2xl p-5 shadow-lg">
+
+        <h2 class="text-xl font-bold text-blue-400 mb-4">
+            📋 Salles disponibles
+        </h2>
+
+        <!-- EMPTY -->
+        @if ((rooms$ | async)?.length === 0) {
+        <div class="text-gray-500 text-center py-6">
+            Aucune salle disponible... sois le premier 👀
+        </div>
+        }
+
+        <!-- LIST -->
+        <div class="space-y-3">
+
+            @for (room of rooms$ | async; track $index) {
+            <div
+                class="flex items-center justify-between bg-black/40 border border-gray-700 rounded-xl p-4 hover:border-blue-400 transition group">
+
+                <!-- INFO -->
+                <div>
+                    <div class="text-lg font-bold group-hover:text-blue-400 transition">
+                        {{ room.roomName }}
+                    </div>
+
+                    <div class="text-sm text-gray-400">
+                        👥 {{ room.players }}/10 joueurs
+                    </div>
+                </div>
+
+                <!-- JOIN -->
+                <button (click)="joinRoom(room.roomId)"
+                    class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-blue-400/50 transition">
+                    ▶ Rejoindre
+                </button>
+
+            </div>
+            }
+        </div>
+
+    </div>
+
 </div>

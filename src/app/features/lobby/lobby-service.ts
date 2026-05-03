@@ -23,4 +23,8 @@ export class LobbyService {
     this.webSocketService.publish('app/room.create', { roomName: 'New Room' });
   }
 
+  joinRoom(roomId: string) {
+    this.webSocketService.publish('app/room.join', { roomId: roomId, playerName: 'test'})
+  }
+
 }
