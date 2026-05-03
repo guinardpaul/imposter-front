@@ -8,11 +8,11 @@ import { Room } from '../../shared/models/room';
 describe('LobbyService', () => {
   let service: LobbyService;
   let webSocketServiceMock: Partial<WebSocketService>;
-  let subscribeCallback!: (message: any) => void;
+  let subscribeCallback!: (message: Partial<IMessage>) => void;
 
   beforeEach(() => {
     webSocketServiceMock = {
-      subscribe: vi.fn((topic: string, callback: any) => {
+      subscribe: vi.fn((topic: string, callback: (message: Partial<IMessage>) => void) => {
         subscribeCallback = callback;
       }),
       publish: vi.fn()
