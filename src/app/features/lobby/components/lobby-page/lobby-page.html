@@ -35,11 +35,13 @@
 
         <div class="flex gap-3">
 
-            <input {{roomName()}} placeholder="Nom de la room..."
+            <input [value]="roomName()"
+                   (input)="onInputRoomName($event)" 
+                placeholder="Nom de la room..."
                 class="flex-1 px-4 py-2 rounded-xl bg-black/40 border border-gray-600 focus:border-green-400 outline-none transition" />
 
-            <button (click)="createRoom()"
-                class="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-bold shadow-lg hover:shadow-green-400/50 transition">
+            <button [disabled]="!isValid()" (click)="createRoom()"
+                class="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-bold shadow-lg hover:shadow-green-400/50 transition disabled:opacity-50">
                 Créer
             </button>
 
@@ -55,7 +57,7 @@
         </h2>
 
         <!-- EMPTY -->
-        @if ((rooms$ | async)?.length === 0) {
+        @if (rooms().length === 0) {
         <div class="text-gray-500 text-center py-6">
             Aucune salle disponible... sois le premier 👀
         </div>
@@ -64,7 +66,7 @@
         <!-- LIST -->
         <div class="space-y-3">
 
-            @for (room of rooms$ | async; track $index) {
+            @for (room of rooms(); track room.roomId) {
             <div
                 class="flex items-center justify-between bg-black/40 border border-gray-700 rounded-xl p-4 hover:border-blue-400 transition group">
 
@@ -75,7 +77,7 @@
                     </div>
 
                     <div class="text-sm text-gray-400">
-                        👥 {{ room.players }}/10 joueurs
+                        👥 {{ room.playerViewList.length }}/10 joueurs
                     </div>
                 </div>
 

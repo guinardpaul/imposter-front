@@ -1,24 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {RouterTestingHarness} from '@angular/router/testing';
+import { RouterTestingHarness } from '@angular/router/testing';
 
 import { HomePage } from './home-page';
 import { LobbyPage } from '../../lobby/components/lobby-page/lobby-page';
 import { provideRouter } from '@angular/router';
 import { LobbyService } from '../../lobby/lobby-service';
 import { SettingsPage } from '../../settings/components/settings-page/settings-page';
+import { signal } from '@angular/core';
 
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
   let lobbyServiceMock: Partial<LobbyService>;
 
-  lobbyServiceMock = {
-      rooms$: undefined,
+  beforeEach(async () => {
+
+    lobbyServiceMock = {
+      rooms: signal([]),
+      initSnapshotSubscription: vi.fn(),
       initRoomSubscription: vi.fn(),
-      createRoom: vi.fn() 
+      createRoom: vi.fn()
     };
 
-  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomePage],
       providers: [
@@ -30,7 +33,7 @@ describe('HomePage', () => {
         { provide: LobbyService, useValue: lobbyServiceMock }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
@@ -60,7 +63,7 @@ describe('HomePage', () => {
 
     await harness.navigateByUrl('/lobby');
     expect(harness.routeNativeElement?.textContent)
-      .toContain('Lobby'); 
+      .toContain('Lobby');
   });
 
   it('should call goToSettings when clicking settings button', () => {
@@ -82,7 +85,7 @@ describe('HomePage', () => {
 
     await harness.navigateByUrl('/settings');
     expect(harness.routeNativeElement?.textContent)
-      .toContain('Settings'); 
+      .toContain('Settings');
   });
 
 });

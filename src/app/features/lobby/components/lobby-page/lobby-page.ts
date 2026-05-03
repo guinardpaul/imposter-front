@@ -1,8 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { LobbyService } from '../../lobby-service';
 import { CommonModule } from '@angular/common';
-import { Room } from '../../../../shared/models/room';
-import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,22 +12,31 @@ import { FormsModule } from '@angular/forms';
 export class LobbyPage {
 
   private lobbyService = inject(LobbyService);
-  rooms$!: Observable<Room[]>;
-  _roomName = signal('');
-  readonly roomName = this._roomName.asReadonly();
+  
+  rooms = this.lobbyService.rooms;
+  roomName = signal('');
 
   playerName = 'Player1';
   playerId = 'abc-123';
 
+  isValid = computed(() => this.roomName().trim().length > 0);
+
   constructor() {
-    this.rooms$ = this.lobbyService.rooms$;
+    this.lobbyService.initSnapshotSubscription();
+    this.lobbyService.initRoomSubscription();
+  }
+
+  onInputRoomName(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.roomName.set(input.value);
   }
 
   createRoom() {
-    if (!this.roomName.length) return;
+    const name = this.roomName();
+    if (!name.trim()) return;
 
-    this.lobbyService.createRoom();
-    this._roomName.set('');
+    this.lobbyService.createRoom(name);
+    this.roomName.set('');
   }
 
   joinRoom(roomId: string) {
