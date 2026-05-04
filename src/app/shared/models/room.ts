@@ -1,7 +1,7 @@
 export interface Room {
     roomId: string;
     roomName: string;
-    players: Player[]
+    playerViewList: Player[]
 }
 
 export interface Player {

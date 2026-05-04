@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LobbyPage } from './lobby-page';
 import { LobbyService } from '../../lobby-service';
+import { signal } from '@angular/core';
 
 describe('LobbyPage', () => {
   let component: LobbyPage;
@@ -10,9 +11,11 @@ describe('LobbyPage', () => {
 
   beforeEach(async () => {
     lobbyServiceMock = {
-      rooms$: undefined,
+      rooms: signal([]),
+      initSnapshotSubscription: vi.fn(),
       initRoomSubscription: vi.fn(),
-      createRoom: vi.fn() 
+      createRoom: vi.fn(),
+      joinRoom: vi.fn()
     };
 
     await TestBed.configureTestingModule({
@@ -21,7 +24,7 @@ describe('LobbyPage', () => {
         { provide: LobbyService, useValue: lobbyServiceMock }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(LobbyPage);
     component = fixture.componentInstance;
@@ -32,13 +35,38 @@ describe('LobbyPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call initRoomSubscription on init', () => {
-    expect(lobbyServiceMock.initRoomSubscription).toHaveBeenCalled();
+  it('should send joinRoom request with roomId', () => {
+    const id = 'aze-123';
+
+    component.joinRoom(id);
+
+    expect(lobbyServiceMock.joinRoom).toHaveBeenCalledWith(id);
   });
 
-  it('should call createRoom on create', () => {
-    component.create();
-    expect(lobbyServiceMock.createRoom).toHaveBeenCalled();
+  it('should not createRoom if name is empty', () => {
+    component.roomName.set('');
+    component.createRoom();
+
+    expect(lobbyServiceMock.createRoom).toHaveBeenCalledTimes(0);
   });
-  
+
+  it('should createRoom if name is not empty', () => {
+    component.roomName.set('Room Name');
+    component.createRoom();
+
+    expect(lobbyServiceMock.createRoom).toHaveBeenCalledWith('Room Name');
+  });
+
+  it('should update roomName signal when typing in input', () => {
+    const event = {
+      target: {
+        value: 'My Room'
+      }
+    } as unknown as Event;
+
+    component.onInputRoomName(event);
+
+    expect(component.roomName()).toBe('My Room');
+  });
+
 });

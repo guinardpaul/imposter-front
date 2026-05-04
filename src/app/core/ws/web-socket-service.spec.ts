@@ -66,8 +66,27 @@ describe('WebSocketService', () => {
 
     const configArg = configureSpy.mock.calls[0][0];
     expect(configArg.connectHeaders).toBeDefined();
-    expect(configArg.connectHeaders!['player-id']).toBe(service['playerId'])
-  })
+    expect(configArg.connectHeaders!['player-id']).toBe(service['playerId']);
+  });
+
+  it('should set player-id to localStorage', () => {
+    service.connect();
+
+    const configArg = configureSpy.mock.calls[0][0];
+    const playerId = configArg.connectHeaders!['player-id'];
+    expect(localStorage.getItem('playerId')).toBe(playerId);
+  });
+
+  it('should get player-id from storage if it exists', () => {
+    localStorage.setItem('playerId', '123456');
+    
+    service.connect();
+
+    const configArg = configureSpy.mock.calls[0][0];
+    expect(configArg.connectHeaders).toBeDefined();
+    expect(configArg.connectHeaders!['player-id']).toBe(service['playerId']);
+    expect(configArg.connectHeaders!['player-id']).toBe('123456');
+  });
 
   it('should subscribe to destination', () => {
     const callback = vi.fn();
