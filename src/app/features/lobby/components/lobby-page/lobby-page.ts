@@ -14,7 +14,7 @@ export class LobbyPage {
   private lobbyService = inject(LobbyService);
   
   rooms = this.lobbyService.rooms;
-  roomName = signal('');
+  roomName = signal('Salle 1');
   playerName = signal('');
   playerId = localStorage.getItem('playerId');
 
