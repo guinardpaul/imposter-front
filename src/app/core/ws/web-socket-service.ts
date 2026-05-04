@@ -10,11 +10,19 @@ import { environment } from '../../../environments/environment';
 export class WebSocketService {
 
   private client!: Client;
-  private playerId = uuid.v4();
+  private playerId!: string;
 
   private clientFactory = inject(STOMP_CLIENT_FACTORY);
 
   connect() {
+    const storedPlayerId = localStorage.getItem('playerId');
+    if (storedPlayerId) {
+      this.playerId = storedPlayerId;
+    } else {
+      this.playerId = uuid.v4();
+      localStorage.setItem('playerId', this.playerId);
+    }
+
     this.client = this.clientFactory();
 
     this.client.configure({
