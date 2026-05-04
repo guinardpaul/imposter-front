@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { LobbyService } from '../../lobby-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -48,11 +48,6 @@ export class LobbyPage {
   getRandomAvatar(): string {
     const index = Math.floor(Math.random() * AVATARS.length);
     return AVATARS[index];
-  }
-
-  onInputRoomName(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.roomName.set(input.value);
   }
 
   createRoom() {

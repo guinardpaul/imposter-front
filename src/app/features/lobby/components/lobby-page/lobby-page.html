@@ -16,7 +16,7 @@
 
             <div class="flex gap-2 mt-3 flex-wrap">
 
-                <button (click)="openAvatarModal()" class="text-4xl p-2 rounded-full hover:bg-gray-700 transition">
+                <button (click)="openAvatarModal()" data-testid="avatar-button" class="text-4xl p-2 rounded-full hover:bg-gray-700 transition">
                     {{ selectedAvatar() }}
                 </button>
 
@@ -43,10 +43,10 @@
 
         <div class="flex gap-3">
 
-            <input [value]="roomName()" (input)="onInputRoomName($event)" placeholder="Nom de la salle..."
+            <input [value]="roomName()" placeholder="Nom de la salle..."
                 class="flex-1 px-4 py-2 rounded-xl bg-black/40 border border-gray-600 focus:border-green-400 outline-none transition" />
 
-            <button [disabled]="!isValid()" (click)="createRoom()"
+            <button [disabled]="!isValid()" (click)="createRoom()" data-testid="create-room-button"
                 class="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-bold shadow-lg hover:shadow-green-400/50 transition disabled:opacity-50">
                 Créer
             </button>
@@ -103,11 +103,18 @@
 
 
 @if (isAvatarModalOpen()) {
-
-<div class="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50" (click)="closeAvatarModal()">
+<div 
+  class="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50"
+  (click)="closeAvatarModal()"
+  (keydown.escape)="closeAvatarModal()"
+  tabindex="0"
+  data-testid="close-avatar-modal"
+>
     <!-- modal box -->
     <div class="bg-gray-900 border border-gray-700 rounded-3xl p-6 shadow-2xl w-[320px]"
-        (click)="$event.stopPropagation()">
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+        tabindex="0">
 
         <h2 class="text-xl font-bold text-center text-white mb-4">
             Choisis ton avatar
