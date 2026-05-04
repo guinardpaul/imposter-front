@@ -15,9 +15,8 @@ export class LobbyPage {
   
   rooms = this.lobbyService.rooms;
   roomName = signal('');
-
-  playerName = 'Player1';
-  playerId = 'abc-123';
+  playerName = signal('');
+  playerId = localStorage.getItem('playerId');
 
   isValid = computed(() => this.roomName().trim().length > 0);
 
