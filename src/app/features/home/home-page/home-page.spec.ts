@@ -85,7 +85,7 @@ describe('HomePage', () => {
 
     await harness.navigateByUrl('/settings');
     expect(harness.routeNativeElement?.textContent)
-      .toContain('Settings');
+      .toContain('Paramètres');
   });
 
 });

@@ -14,6 +14,14 @@
     <div class="bg-gray-800/70 backdrop-blur border border-gray-700 rounded-2xl p-4 mb-6 shadow-lg">
         <div class="flex items-center justify-between">
 
+            <div class="flex gap-2 mt-3 flex-wrap">
+
+                <button (click)="openAvatarModal()" data-testid="avatar-button" class="text-4xl p-2 rounded-full hover:bg-gray-700 transition">
+                    {{ selectedAvatar() }}
+                </button>
+
+            </div>
+
             <div>
                 <input [value]="playerName()" placeholder="Pseudo..."
                     class="flex-1 px-4 py-2 rounded-xl bg-black/40 border border-gray-600 focus:border-green-400 outline-none transition" />
@@ -35,10 +43,10 @@
 
         <div class="flex gap-3">
 
-            <input [value]="roomName()" (input)="onInputRoomName($event)" placeholder="Nom de la salle..."
+            <input [value]="roomName()" placeholder="Nom de la salle..."
                 class="flex-1 px-4 py-2 rounded-xl bg-black/40 border border-gray-600 focus:border-green-400 outline-none transition" />
 
-            <button [disabled]="!isValid()" (click)="createRoom()"
+            <button [disabled]="!isValid()" (click)="createRoom()" data-testid="create-room-button"
                 class="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-bold shadow-lg hover:shadow-green-400/50 transition disabled:opacity-50">
                 Créer
             </button>
@@ -92,3 +100,54 @@
     </div>
 
 </div>
+
+
+@if (isAvatarModalOpen()) {
+<div 
+  class="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50"
+  (click)="closeAvatarModal()"
+  (keydown.escape)="closeAvatarModal()"
+  tabindex="0"
+  data-testid="close-avatar-modal"
+>
+    <!-- modal box -->
+    <div class="bg-gray-900 border border-gray-700 rounded-3xl p-6 shadow-2xl w-[320px]"
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+        tabindex="0">
+
+        <h2 class="text-xl font-bold text-center text-white mb-4">
+            Choisis ton avatar
+        </h2>
+
+        <!-- avatars grid -->
+        <div class="grid grid-cols-5 gap-3">
+
+            @for (avatar of avatars; track avatar) {
+            <button (click)="selectAvatar(avatar)" class="flex items-center justify-center
+         w-14 h-14
+         text-3xl leading-none
+         rounded-xl
+         transition
+         hover:bg-gray-700
+         hover:scale-110
+         active:scale-95" [class.ring-2]="selectedAvatar() === avatar"
+                [class.ring-green-400]="selectedAvatar() === avatar">
+                {{ avatar }}
+            </button>
+            }
+
+        </div>
+
+        <!-- close button -->
+        <div class="mt-5 text-center">
+            <button (click)="closeAvatarModal()" class="text-sm text-gray-400 hover:text-white transition">
+                Fermer
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+}

@@ -57,16 +57,123 @@ describe('LobbyPage', () => {
     expect(lobbyServiceMock.createRoom).toHaveBeenCalledWith('Room Name');
   });
 
-  it('should update roomName signal when typing in input', () => {
-    const event = {
-      target: {
-        value: 'My Room'
-      }
-    } as unknown as Event;
+  it('should open avatar modal', () => {
+    component.openAvatarModal();
 
-    component.onInputRoomName(event);
-
-    expect(component.roomName()).toBe('My Room');
+    expect(component.isAvatarModalOpen()).toBe(true);
   });
+
+  it('should close avatar modal', () => {
+    component.isAvatarModalOpen.set(true);
+
+    component.closeAvatarModal();
+
+    expect(component.isAvatarModalOpen()).toBe(false);
+  });
+
+  it('should select avatar and close modal', () => {
+    component.isAvatarModalOpen.set(true);
+
+    component.selectAvatar('🐸');
+
+    expect(component.selectedAvatar()).toBe('🐸');
+    expect(component.isAvatarModalOpen()).toBe(false);
+  });
+
+  it('should open avatar modal on real click', () => {
+
+  const button: HTMLButtonElement =
+    fixture.nativeElement.querySelector('[data-testid="avatar-button"]');
+
+  button.click();
+
+  fixture.detectChanges();
+
+  expect(component.isAvatarModalOpen()).toBe(true);
+});
+
+it('should close modal when clicking overlay', () => {
+
+  component.isAvatarModalOpen.set(true);
+  fixture.detectChanges();
+
+  const overlay: HTMLElement =
+    fixture.nativeElement.querySelector('[data-testid="close-avatar-modal"]');
+
+  overlay.click();
+
+  expect(component.isAvatarModalOpen()).toBe(false);
+});
+
+it('should close modal when pressing Escape key', () => {
+
+  component.isAvatarModalOpen.set(true);
+  fixture.detectChanges();
+
+  const overlay: HTMLElement =
+    fixture.nativeElement.querySelector('[data-testid="close-avatar-modal"]');
+
+  overlay.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Escape' })
+  );
+
+  expect(component.isAvatarModalOpen()).toBe(false);
+});
+
+ it('should disable button when roomName is empty', () => {
+
+  component.roomName.set('');
+
+  fixture.detectChanges();
+
+  const button: HTMLButtonElement =
+    fixture.nativeElement.querySelector('[data-testid="create-room-button"]');
+
+  expect(button.disabled).toBe(true);
+});
+
+it('should enable button when roomName is valid', () => {
+
+  component.roomName.set('My Room');
+
+  fixture.detectChanges();
+
+  const button: HTMLButtonElement =
+    fixture.nativeElement.querySelector('[data-testid="create-room-button"]');
+
+  expect(button.disabled).toBe(false);
+});
+
+it('should call createRoom on click when enabled', () => {
+
+  component.roomName.set('My Room');
+
+  const spy = vi.spyOn(component, 'createRoom');
+
+  fixture.detectChanges();
+
+  const button: HTMLButtonElement =
+    fixture.nativeElement.querySelector('[data-testid="create-room-button"]');
+
+  button.click();
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it('should not call createRoom when button is disabled', () => {
+
+  component.roomName.set('');
+
+  const spy = vi.spyOn(component, 'createRoom');
+
+  fixture.detectChanges();
+
+  const button: HTMLButtonElement =
+    fixture.nativeElement.querySelector('[data-testid="create-room-button"]');
+
+  button.click();
+
+  expect(spy).not.toHaveBeenCalled();
+});
 
 });
